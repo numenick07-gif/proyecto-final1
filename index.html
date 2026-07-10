@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Stlite CSS for interactive Streamlit in the browser -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.39.0/build/style.css" />
     <title>EduAI Predictor - Analítica Educativa con CRISP-ML, Machine Learning y RA</title>
     <meta name="description" content="Landing page de EduAI Predictor. Una plataforma escolar basada en Inteligencia Artificial y Realidad Aumentada para predecir el rendimiento estudiantil usando Regresión Logística y Lineal.">
     <!-- Google Fonts -->
@@ -742,212 +740,16 @@
         </div>
     </section>
 
-    <!-- Sección de Simulador Streamlit (Ejecutándose localmente en el navegador con WebAssembly via Stlite) -->
+    <!-- Sección de Simulador Streamlit -->
     <section id="simulador" style="border-top: 1px solid var(--border-color);">
         <div class="section-header">
             <h2>Simulador Predictivo en Tiempo Real</h2>
-            <p>Ejecuta y explora las predicciones del modelo de Inteligencia Artificial (Regresión Logística y Regresión Lineal) ajustando las métricas directamente en el navegador.</p>
+            <p>Ejecuta y explora las predicciones del modelo de Inteligencia Artificial (Regresión Logística y Regresión Lineal) ajustando las métricas en la barra lateral.</p>
         </div>
         <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 1rem; border-radius: 24px; box-shadow: 0 10px 40px rgba(99, 102, 241, 0.15); backdrop-filter: blur(10px); overflow: hidden;">
-            <div id="streamlit-app" style="border-radius: 16px; overflow: hidden; background: #ffffff; min-height: 800px; color: #000000;">
-                <div style="padding: 2rem; text-align: center; color: #4b5563;">
-                    <p>⚡ Cargando entorno de ejecución de Python en WebAssembly (Pyodide)...</p>
-                    <p style="font-size: 0.85rem; color: #9ca3af; margin-top: 0.5rem;">Esto puede tomar unos segundos la primera vez.</p>
-                </div>
-            </div>
+            <iframe src="https://proyecto-final1-i4fhearnebfjukuvx8nywc.streamlit.app/?embed=true" width="100%" height="800" style="border: none; border-radius: 16px; background: #ffffff;" allowfullscreen></iframe>
         </div>
     </section>
-
-    <!-- Stlite Script for interactive Streamlit in WebAssembly -->
-    <script src="https://cdn.jsdelivr.net/npm/@stlite/mountable@0.39.0/build/stlite.js"></script>
-    <script>
-        stlite.mount({
-            requirements: ["pandas", "numpy", "scikit-learn", "matplotlib", "seaborn"],
-            entrypoint: "app.py",
-            files: {
-                "app.py": `
-import streamlit as st
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.linear_model import LogisticRegression, LinearRegression
-from sklearn.preprocessing import StandardScaler
-
-# Configuración de página
-st.set_page_config(
-    page_title="Analítica Predictiva Escolar - CRISP-ML",
-    page_icon="🎓",
-    layout="wide"
-)
-
-# Estilo CSS personalizado
-st.markdown("""
-<style>
-    .main-header {
-        font-size: 2.2rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-    }
-    .sub-header {
-        font-size: 1.1rem;
-        color: #555;
-        margin-bottom: 1.5rem;
-    }
-    .metric-card {
-        background: #ffffff;
-        padding: 1.2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        margin-bottom: 1.2rem;
-    }
-    .status-card-success {
-        background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
-        color: #1e4620;
-        padding: 1.2rem;
-        border-radius: 12px;
-        font-weight: bold;
-        text-align: center;
-        box-shadow: 0 4px 10px rgba(150, 230, 161, 0.2);
-    }
-    .status-card-danger {
-        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
-        color: #5c181b;
-        padding: 1.2rem;
-        border-radius: 12px;
-        font-weight: bold;
-        text-align: center;
-        box-shadow: 0 4px 10px rgba(255, 154, 158, 0.2);
-    }
-</style>
-""", unsafe_allow_html=True)
-
-# Dataset de 24 estudiantes
-data = {
-    'Asistencia': [
-        92, 65, 95, 58, 88, 72, 97, 60, 90, 55, 85, 68,
-        93, 62, 89, 70, 96, 52, 87, 66, 91, 59, 94, 74
-    ],
-    'Tareas_Anteriores_Entregadas': [
-        9, 4, 10, 3, 8, 5, 10, 4, 9, 2, 7, 5,
-        9, 4, 8, 6, 10, 2, 8, 5, 9, 3, 10, 6
-    ],
-    'Recordatorio_Enviado': [
-        1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0,
-        1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1
-    ],
-    'Entrego': [
-        1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0,
-        1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1
-    ]
-}
-df = pd.DataFrame(data)
-
-# Entrenamiento de Modelos
-X_cls = df[['Asistencia', 'Tareas_Anteriores_Entregadas', 'Recordatorio_Enviado']]
-y_cls = df['Entrego']
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X_cls)
-
-logistic_model = LogisticRegression(random_state=42)
-logistic_model.fit(X_scaled, y_cls)
-
-X_reg = df[['Asistencia', 'Recordatorio_Enviado']]
-y_reg = df['Tareas_Anteriores_Entregadas']
-linear_model = LinearRegression()
-linear_model.fit(X_reg, y_reg)
-
-lpm_model = LinearRegression()
-lpm_model.fit(X_cls, y_cls)
-
-# Estructura de la aplicación
-st.markdown("<div class='main-header'>🎓 Simulador Predictivo Integrado</div>", unsafe_allow_html=True)
-st.markdown("<div class='sub-header'>Ajusta los indicadores escolares para predecir la entrega escolar con IA en tiempo real.</div>", unsafe_allow_html=True)
-
-st.sidebar.markdown("### 🎛️ Parámetros del Estudiante")
-asistencia_input = st.sidebar.slider("Porcentaje de Asistencia (%)", 0.0, 100.0, 80.0, 1.0)
-tareas_previas_input = st.sidebar.slider("Tareas Anteriores Entregadas", 0, 10, 6, 1)
-recordatorio_input = st.sidebar.radio("¿Se envió Recordatorio?", ["Sí", "No"], index=0)
-recordatorio_bin = 1 if recordatorio_input == "Sí" else 0
-
-# DataFrames de Entrada
-input_cls_df = pd.DataFrame([{
-    'Asistencia': asistencia_input,
-    'Tareas_Anteriores_Entregadas': tareas_previas_input,
-    'Recordatorio_Enviado': recordatorio_bin
-}])
-input_reg_df = pd.DataFrame([{
-    'Asistencia': asistencia_input,
-    'Recordatorio_Enviado': recordatorio_bin
-}])
-
-# Predicciones
-input_cls_scaled = scaler.transform(input_cls_df)
-prob_entrega = logistic_model.predict_proba(input_cls_scaled)[0, 1]
-
-pred_tareas = linear_model.predict(input_reg_df)[0]
-pred_tareas = np.clip(pred_tareas, 0, 10)
-
-pred_lpm = lpm_model.predict(input_cls_df)[0]
-
-# Pestañas
-tab1, tab2, tab3 = st.tabs(["🎯 Clasificación Logística", "📈 Regresión Lineal y LPM", "💾 Datos Históricos"])
-
-with tab1:
-    col1, col2 = st.columns([1, 1.2])
-    with col1:
-        prob_pct = prob_entrega * 100
-        if prob_entrega >= 0.50:
-            st.markdown(f"""
-            <div class='status-card-success'>
-                <h2>¡Entrega Probable!</h2>
-                <p style='font-size: 2.2rem; margin: 0;'>{prob_pct:.1f}%</p>
-                <p>Probabilidad de entrega estimada. El estudiante no requiere intervención especial.</p>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown(f"""
-            <div class='status-card-danger'>
-                <h2>Riesgo de Incumplimiento</h2>
-                <p style='font-size: 2.2rem; margin: 0;'>{prob_pct:.1f}%</p>
-                <p>El estudiante está en riesgo de no cumplir. Se sugiere apoyo docente.</p>
-            </div>
-            """, unsafe_allow_html=True)
-        st.write("")
-        st.progress(prob_entrega)
-    with col2:
-        st.write("#### Impacto relativo de Coeficientes de Clasificación:")
-        coefs = logistic_model.coef_[0]
-        coef_df = pd.DataFrame({
-            "Variable": ["Asistencia", "Tareas Previas", "Recordatorio"],
-            "Peso (Beta)": coefs
-        })
-        st.table(coef_df)
-
-with tab2:
-    col1, col2 = st.columns([1, 1.2])
-    with col1:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-        st.metric("Historial de Tareas Estimadas", f"{pred_tareas:.2f} tareas / 10")
-        st.write(f"Estimación lineal basada en el porcentaje de asistencia.")
-        st.markdown("</div>", unsafe_allow_html=True)
-    with col2:
-        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
-        st.write("#### Probabilidad Estimada por Modelo Lineal (LPM):")
-        st.markdown(f"<h3>{pred_lpm*100:.2f}%</h3>", unsafe_allow_html=True)
-        st.write("Ajuste directo OLS sobre la variable binaria.")
-        st.markdown("</div>", unsafe_allow_html=True)
-
-with tab3:
-    st.dataframe(df, width='stretch')
-`
-            }
-        }, document.getElementById("streamlit-app"));
-    </script>
 
     <!-- Galería Realidad Aumentada -->
     <section id="realidad-aumentada" style="border-top: 1px solid var(--border-color);">
