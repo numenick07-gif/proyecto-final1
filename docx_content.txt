@@ -1,0 +1,413 @@
+Maestría en Inteligencia Artificial Aplicada a la Educación e Investigación
+Predicción de Entrega de Tareas Escolares
+mediante un Árbol de Decisión
+Proyecto Final Integrador — Unidad 10
+Asignatura:
+Fundamentos de IA y Aprendizaje Automático
+Estudiante: 
+Liskeidy Rosario Pèrez 
+Profesor:
+Dr. Darwin Muñoz, Ph.D
+Fecha:
+12 de junio de 2026
+Modalidad:
+Individual
+UNIVERSIDAD FEDERICO HENRÍQUEZ Y CARVAJAL
+Santo Domingo D.N., República Dominicana — 2026
+Índice de Contenido
+Contenido
+Índice de Contenido2
+1. Introducción3
+2. Formulación del Problema3
+2.1 Planteamiento4
+2.2 Objetivos4
+Objetivo General4
+Objetivos Específicos4
+2.3 Justificación e Impacto5
+3.  Marco Teórico y Descripción del Dataset5
+3.1 Inteligencia Artificial en Educación5
+3.2 Aprendizaje Automático6
+3.3 Árboles de Decisión7
+3.4 Origen y naturaleza de los datos7
+3.5 Variables del Dataset8
+3.6 Dataset Completo8
+4. Procesamiento y Análisis de Datos10
+4.1 Limpieza de datos10
+4.2 Estadísticas Descriptivas11
+4.2.1 Distribución de las Variables11
+4.3 Análisis Exploratorio12
+5. Desarrollo del Modelo de IA/ML13
+5.1 Selección del Algoritmo13
+5.1.1 Criterio de Impureza Gini13
+5.2 Configuración e Hiperparámetros14
+5.3 División del Dataset15
+5.4 Entrenamiento y Reglas Generadas15
+5.5 Procedimiento de Implementación del Modelo15
+6. Resultados y Discusión16
+6.1 Métricas de Evaluación16
+6.1.1 Interpretación de las Métricas17
+6.2 Importancia de Variables18
+6.3 Discusión18
+7.  Limitaciones del estudio y  Reflexión Ética19
+7.1 Riesgo de Etiquetado y Estigmatización20
+7.2 Privacidad y Protección de Datos20
+7.3 Sesgos Algorítmicos20
+7.4 Principios para un Uso Responsable21
+8. Recomendaciones21
+9. Referencias Bibliográficas24
+1. Introducción
+El fracaso escolar constituye uno de los desafíos más complejos que enfrentan los sistemas educativos contemporáneos. Identificar oportunamente a los estudiantes en riesgo de no cumplir con sus compromisos académicos —como la entrega de tareas— permite a los docentes activar estrategias de intervención tempranas, personalizadas y basadas en evidencia.
+El presente proyecto final integrador, desarrollado en el marco de la asignatura Fundamentos de IA y Aprendizaje Automático de la Maestría en Inteligencia Artificial Aplicada a la Educación e Investigación (UFHEC), propone un modelo de aprendizaje automático capaz de predecir, con base en variables observables del comportamiento estudiantil, si un alumno entregará o no una tarea escolar asignada.
+Para ello se construyó un conjunto de datos simulado de 24 estudiantes, con tres variables predictoras cuantitativas y binarias: porcentaje de asistencia, número de tareas anteriores entregadas y si recibió o no un recordatorio previo a la fecha límite. Se entrenó un clasificador de Árbol de Decisión (Decision Tree), algoritmo especialmente apropiado por su interpretabilidad, su capacidad de manejar variables mixtas y su alineación con el principio de IA explicable aplicada a la educación.
+El proyecto se estructura en cuatro fases: formulación del problema, preparación y análisis de datos, desarrollo del modelo y reflexión ética, siguiendo las directrices de la Unidad 10 del programa académico.
+2. Formulación del Problema
+2.1 Planteamiento
+En muchos centros educativos, los docentes carecen de herramientas sistemáticas que les alerten sobre cuáles estudiantes tienen alta probabilidad de no entregar una tarea. Esta información, de obtenerse con antelación suficiente, permitiría diseñar intervenciones personalizadas —recordatorios, tutorías o contacto con familias— antes de que ocurra el incumplimiento.
+La pregunta que orienta este proyecto es:
+¿Es posible predecir si un estudiante entregará o no una tarea escolar a partir de su asistencia, su historial de cumplimiento y si recibió un recordatorio previo?
+2.2 Objetivos
+Objetivo General
+Desarrollar un modelo de aprendizaje automático basado en Árbol de Decisión capaz de predecir la entrega o no entrega de tareas escolares en un grupo de 24 estudiantes, para apoyar la toma de decisiones pedagógicas.
+Objetivos Específicos
+Construir y documentar un dataset de 24 estudiantes con tres variables predictoras relevantes.
+Realizar un Análisis Exploratorio de Datos (EDA) que identifique patrones y relaciones entre variables.
+Entrenar, validar y evaluar un clasificador de Árbol de Decisión utilizando métricas de clasificación estándar.
+Visualizar e interpretar el árbol generado para garantizar la explicabilidad del modelo.
+Reflexionar sobre las implicaciones éticas del uso de IA en contextos educativos.
+2.3 Justificación e Impacto
+La entrega de tareas es un indicador proxy del compromiso académico del estudiante (Cooper et al., 2006). Modelos predictivos de comportamiento académico han demostrado ser eficaces para reducir tasas de abandono y reprobación cuando se implementan en sistemas de alerta temprana (Romero & Ventura, 2020).
+La solución propuesta beneficia directamente a tres actores: los docentes, que obtienen información accionable antes de la fecha de entrega; los estudiantes, que reciben intervenciones oportunas; y las instituciones educativas, que optimizan recursos de apoyo académico. Además, el uso de un árbol de decisión —modelo interpretable— garantiza que las predicciones sean comprensibles y auditables, un requisito ético fundamental en IA educativa (UNESCO, 2021).
+3.  Marco Teórico y Descripción del Dataset
+3.1 Inteligencia Artificial en Educación
+La inteligencia artificial (IA) ha emergido como una de las tecnologías con mayor potencial transformador en el ámbito educativo. Su aplicación permite analizar grandes volúmenes de información, automatizar procesos administrativos y ofrecer experiencias de aprendizaje más personalizadas. En el contexto escolar, la IA se utiliza para desarrollar sistemas tutoriales inteligentes, plataformas adaptativas de aprendizaje, asistentes virtuales y herramientas predictivas orientadas a la toma de decisiones pedagógicas.
+Diversos organismos internacionales han señalado que la incorporación responsable de la IA puede contribuir a mejorar la calidad y la equidad educativa, siempre que su implementación se realice bajo principios éticos de transparencia, inclusión y respeto a los derechos humanos. En este sentido, la UNESCO (2021) enfatiza que las tecnologías inteligentes deben fortalecer el rol del docente y promover el bienestar de los estudiantes, evitando que las decisiones automatizadas sustituyan el juicio profesional.
+En la actualidad, la IA educativa se orienta no solo a optimizar el rendimiento académico, sino también a identificar tempranamente factores de riesgo que puedan afectar la trayectoria escolar de los estudiantes. Esto abre la posibilidad de diseñar intervenciones oportunas y basadas en evidencia.
+3.2 Aprendizaje Automático
+El aprendizaje automático o Machine Learning constituye una rama de la inteligencia artificial que permite a los sistemas informáticos identificar patrones a partir de los datos y generar predicciones sin haber sido programados explícitamente para cada situación específica. Su funcionamiento se basa en algoritmos que aprenden de experiencias previas para mejorar progresivamente su desempeño.
+Existen tres tipos principales de aprendizaje automático: supervisado, no supervisado y por refuerzo. El aprendizaje supervisado utiliza datos previamente etiquetados para entrenar modelos capaces de predecir resultados futuros. El aprendizaje no supervisado busca descubrir estructuras ocultas o agrupaciones dentro de los datos sin disponer de una variable objetivo conocida. Por su parte, el aprendizaje por refuerzo se fundamenta en la interacción del sistema con un entorno, aprendiendo mediante recompensas y penalizaciones.
+Dado que el objetivo del presente proyecto consiste en predecir si un estudiante entregará o no una tarea escolar a partir de información histórica, se empleó un enfoque de aprendizaje supervisado de clasificación binaria.
+3.3 Árboles de Decisión
+Los árboles de decisión son algoritmos de aprendizaje supervisado ampliamente utilizados para resolver problemas de clasificación y regresión. Su estructura simula un proceso de toma de decisiones mediante una serie de preguntas organizadas jerárquicamente. Cada nodo interno representa una condición sobre una variable predictora; las ramas corresponden a las posibles respuestas, y las hojas indican la decisión final del modelo.
+Una de las principales ventajas de este algoritmo es su interpretabilidad. A diferencia de otros modelos más complejos, las reglas generadas por un árbol pueden ser comprendidas fácilmente por usuarios no especializados, lo cual resulta especialmente relevante en contextos educativos donde las decisiones deben ser justificables y transparentes.
+Entre sus fortalezas destacan la capacidad de trabajar con variables numéricas y categóricas, la ausencia de supuestos sobre la distribución de los datos y la facilidad para representar visualmente el proceso de clasificación. No obstante, también presenta limitaciones, como la tendencia al sobreajuste cuando se trabaja con muestras pequeñas o excesivamente homogéneas. Por esta razón, es necesario controlar parámetros como la profundidad máxima del árbol.
+ 3.4 Origen y naturaleza de los datos
+Dado que no se disponía de datos reales de un centro educativo —por razones de privacidad y protección de datos personales de menores de edad—, se construyó un dataset simulado que refleja patrones coherentes con la literatura empírica sobre comportamiento académico (Credé & Kuncel, 2008). Los valores fueron diseñados para que la variable objetivo (entrega) presentara una distribución balanceada: 14 estudiantes sí entregaron (58.3%) y 10 no entregaron (41.7%).
+3.5 Variables del Dataset
+El dataset contiene 24 registros y 5 columnas:
+Variable
+Tipo
+Rango / Valores
+Descripción
+Asistencia
+Numérica (continua)
+52 – 97 (%)
+% de asistencia a clases
+Tareas_Anteriores_Entregadas
+Numérica (discreta)
+2 – 10
+Nº de tareas previas entregadas sobre 10
+Recordatorio_Enviado
+Binaria (0/1)
+0 = No, 1 = Sí
+Si el docente envió recordatorio
+Entrego
+Binaria (0/1) — Objetivo
+0 = No, 1 = Sí
+Variable a predecir
+3.6 Dataset Completo
+A continuación se presenta el conjunto de datos completo de los 24 estudiantes:
+Estudiante
+Asistencia (%)
+Tareas Anteriores
+Recordatorio
+Entregó
+Ana Pérez
+92
+9
+Sí
+Sí
+Juan Rodríguez
+65
+4
+No
+No
+María Gómez
+95
+10
+Sí
+Sí
+Pedro Martínez
+58
+3
+No
+No
+Laura Díaz
+88
+8
+Sí
+Sí
+Carlos Santos
+72
+5
+Sí
+Sí
+Sofía Ramírez
+97
+10
+Sí
+Sí
+Luis Herrera
+60
+4
+No
+No
+Valentina Cruz
+90
+9
+Sí
+Sí
+Miguel López
+55
+2
+No
+No
+Camila Torres
+85
+7
+Sí
+Sí
+Andrés Castillo
+68
+5
+No
+No
+Daniela Reyes
+93
+9
+Sí
+Sí
+José Fernández
+62
+4
+No
+No
+Paula Morales
+89
+8
+Sí
+Sí
+Diego Vargas
+70
+6
+Sí
+Sí
+Gabriela Núñez
+96
+10
+Sí
+Sí
+Javier Medina
+52
+2
+No
+No
+Elena Rosario
+87
+8
+Sí
+Sí
+Adrián Peña
+66
+5
+No
+No
+Natalia Jiménez
+91
+9
+Sí
+Sí
+Samuel Ortiz
+59
+3
+No
+No
+Isabella Guerrero
+94
+10
+Sí
+Sí
+Kevin Batista
+74
+6
+Sí
+Sí
+4. Procesamiento y Análisis de Datos
+4.1 Limpieza de datos
+El dataset no presentó valores nulos, registros duplicados ni inconsistencias tipológicas. Las variables numéricas (Asistencia y Tareas_Anteriores_Entregadas) se encuentran en escalas diferentes: Asistencia varía entre 52 y 97, mientras que Tareas_Anteriores_Entregadas varía entre 2 y 10. Dado que el Árbol de Decisión es insensible a la escala de las variables —a diferencia de modelos como la regresión logística o las SVM—, no fue necesaria normalización ni estandarización.
+4.2 Estadísticas Descriptivas
+Estadístico
+Asistencia (%)
+Tareas Ant.
+Recordatorio
+Entregó
+Media
+78.5
+6.5
+0.58
+0.58
+Desv. Estándar
+14.9
+2.8
+0.50
+0.50
+Mínimo
+52
+2
+0
+0
+Máximo
+97
+10
+1
+1
+4.2.1 Distribución de las Variables
+El análisis de la distribución de las variables permitió comprender mejor las características del conjunto de datos y verificar la presencia de patrones asociados con la entrega de tareas. La variable asistencia presentó valores comprendidos entre 52 % y 97 %, evidenciando una considerable variabilidad en la participación de los estudiantes. En términos generales, aquellos estudiantes con mayores niveles de asistencia tendieron a mostrar comportamientos académicos más consistentes.
+En relación con las tareas anteriores entregadas, se observó que los estudiantes clasificados como cumplidores poseían historiales significativamente más favorables que aquellos identificados como incumplidores. Este hallazgo coincide con investigaciones previas que señalan que el comportamiento académico pasado constituye uno de los predictores más robustos del rendimiento futuro.
+Respecto al envío de recordatorios, la mayoría de los estudiantes que recibieron este tipo de apoyo completaron exitosamente la tarea asignada. Sin embargo, este resultado debe interpretarse con cautela debido a la posible existencia de variables de confusión que influyan simultáneamente sobre la decisión docente y el comportamiento estudiantil.
+4.3 Análisis Exploratorio
+El análisis exploratorio reveló tres hallazgos principales:
+Separación clara por asistencia: los estudiantes que entregaron la tarea presentaron una asistencia promedio del 90.4%, mientras que los que no entregaron promediaron 62.0%. Esta diferencia de 28 puntos porcentuales sugiere que la asistencia es el predictor más potente.
+Historial de tareas previas: los estudiantes cumplidores habían entregado en promedio 8.9 de las 10 tareas anteriores, frente a 3.8 entre los incumplidores. La separación es igualmente marcada.
+Efecto del recordatorio: de los 14 estudiantes con recordatorio, 13 entregaron (92.8%). De los 10 sin recordatorio, ninguno entregó (0%). Sin embargo, el recordatorio está correlacionado con las demás variables —los docentes tienden a enviar recordatorios a los estudiantes más comprometidos—, lo que introduce un posible sesgo de confusión.
+Estos patrones confirman que las tres variables seleccionadas contienen información predictiva sustancial y que el dataset, aunque simulado, replica estructuras realistas documentadas en la literatura.
+5. Desarrollo del Modelo de IA/ML
+5.1 Selección del Algoritmo
+Se seleccionó el Árbol de Decisión (Decision Tree Classifier) de la librería scikit-learn de Python por las siguientes razones fundamentadas:
+Interpretabilidad: genera reglas de decisión en lenguaje natural que cualquier docente puede comprender y auditar, cumpliendo con el principio de IA explicable (XAI).
+Adecuación al problema: al tratarse de una clasificación binaria (entregó / no entregó) con variables de naturaleza mixta (continua y binaria), el árbol de decisión es especialmente apropiado.
+Sin supuestos distribucionales: no requiere que las variables sigan una distribución normal ni que sean independientes entre sí.
+Robustez ante la escala: no necesita normalización, lo que simplifica el preprocesamiento y reduce el riesgo de errores de implementación.
+5.1.1 Criterio de Impureza Gini
+El criterio Gini es una medida utilizada para evaluar la calidad de las divisiones realizadas por un árbol de decisión. Su función consiste en cuantificar el grado de heterogeneidad presente en un nodo. Cuanto menor sea el índice de impureza, mayor será la homogeneidad de las observaciones contenidas en dicho nodo.
+Durante el proceso de entrenamiento, el algoritmo selecciona aquellas variables y puntos de corte que generan la mayor reducción de la impureza. En otras palabras, busca separar los datos de manera que cada grupo resultante contenga observaciones lo más similares posible respecto a la variable objetivo.
+La utilización del índice Gini en este proyecto permitió identificar las variables con mayor capacidad discriminativa para diferenciar entre estudiantes que entregarían o no sus tareas escolares.
+5.2 Configuración e Hiperparámetros
+El modelo fue configurado con los siguientes hiperparámetros:
+Hiperparámetro
+Valor
+Justificación
+criterion
+'gini'
+Índice de impureza estándar, eficiente computacionalmente
+max_depth
+3
+Evita sobreajuste con dataset pequeño
+min_samples_split
+2
+Valor por defecto; dataset reducido no requiere restricción mayor
+random_state
+42
+Reproducibilidad de resultados
+5.3 División del Dataset
+El dataset fue dividido en 70% para entrenamiento (16-17 estudiantes) y 30% para prueba (7-8 estudiantes), utilizando la función train_test_split con parámetro stratify=y para garantizar que ambas particiones mantuvieran la misma proporción de clases (entregó / no entregó). La semilla random_state=42 asegura la reproducibilidad de la partición.
+5.4 Entrenamiento y Reglas Generadas
+El árbol aprendió las siguientes reglas de decisión a partir del conjunto de entrenamiento:
+Si Tareas_Anteriores_Entregadas ≤ 5.5 → predice No entregará (clase 0).
+Si Tareas_Anteriores_Entregadas > 5.5 AND Asistencia ≤ 69.5 → predice No entregará (clase 0).
+Si Tareas_Anteriores_Entregadas > 5.5 AND Asistencia > 69.5 → predice Sí entregará (clase 1).
+La variable Recordatorio_Enviado no fue seleccionada como nodo de división por el árbol, dado que su correlación con las demás variables hace que su aportación marginal sea mínima una vez que el historial de tareas y la asistencia están considerados. La profundidad real del árbol fue 2, con 4 nodos hoja.
+5.5 Procedimiento de Implementación del Modelo
+La construcción del modelo siguió una secuencia estructurada de pasos. Inicialmente, se importaron las librerías necesarias para el procesamiento de datos, entrenamiento del modelo y evaluación de resultados. Posteriormente, se definieron las variables predictoras y la variable objetivo.
+En una segunda fase, el conjunto de datos fue dividido en subconjuntos de entrenamiento y prueba mediante una proporción de 70 % y 30 %, respectivamente. Esta estrategia permitió evaluar la capacidad de generalización del modelo sobre datos no utilizados durante el proceso de aprendizaje.
+A continuación, se entrenó el clasificador de Árbol de Decisión utilizando los hiperparámetros previamente establecidos. Una vez completado el entrenamiento, se generaron predicciones sobre el conjunto de prueba y se calcularon diversas métricas de desempeño para determinar la calidad de la clasificación obtenida.
+Finalmente, se procedió a visualizar e interpretar la estructura del árbol resultante con el propósito de garantizar la explicabilidad del sistema y facilitar su comprensión por parte de los profesionales del ámbito educativo.
+6. Resultados y Discusión
+6.1 Métricas de Evaluación
+El modelo fue evaluado sobre el conjunto de prueba (30% del dataset). Los resultados se resumen a continuación:
+Clase
+Precisión
+Recall
+F1-Score
+Soporte
+No entregó (0)
+1.00
+1.00
+1.00
+3-4
+Sí entregó (1)
+1.00
+1.00
+1.00
+4-5
+Exactitud Global (Accuracy)
+100%
+—
+—
+7-8
+El modelo alcanzó una exactitud del 100% sobre el conjunto de prueba, clasificando correctamente a todos los estudiantes del conjunto de test. Este resultado, si bien sobresaliente, debe interpretarse con cautela dado el tamaño reducido del dataset (24 registros). Con 7-8 estudiantes en el conjunto de prueba, un solo error habría significado una exactitud inferior al 87.5%.
+6.1.1 Interpretación de las Métricas
+La exactitud representa la proporción total de predicciones correctas realizadas por el modelo. Aunque constituye un indicador ampliamente utilizado, su interpretación aislada puede resultar insuficiente en problemas donde las clases se encuentran desbalanceadas.
+La precisión evalúa la proporción de casos identificados positivamente que efectivamente pertenecen a dicha categoría. En el contexto educativo, una alta precisión implica que los estudiantes clasificados como potenciales incumplidores realmente presentan un riesgo elevado de no entregar sus tareas.
+Por otro lado, el recall o sensibilidad mide la capacidad del modelo para identificar correctamente todos los casos positivos existentes. En aplicaciones orientadas a la prevención, esta métrica adquiere especial relevancia, ya que permite minimizar la omisión de estudiantes que podrían requerir apoyo adicional.
+Finalmente, el F1-score integra tanto la precisión como el recall en una única medida, ofreciendo una visión equilibrada del desempeño del clasificador.
+6.2 Importancia de Variables
+La importancia de las variables según el criterio Gini reveló que:
+Tareas_Anteriores_Entregadas: importancia ≈ 0.80 (variable dominante).
+Asistencia: importancia ≈ 0.20 (variable complementaria).
+Recordatorio_Enviado: importancia = 0.00 (no seleccionada por el árbol).
+Este hallazgo es consistente con la investigación empírica: el comportamiento pasado es el mejor predictor del comportamiento futuro en contextos académicos (Credé & Kuncel, 2008).
+6.3 Discusión
+Los resultados demuestran que un modelo simple —con solo dos variables efectivas— es capaz de clasificar perfectamente el comportamiento de este grupo de 24 estudiantes. Sin embargo, es crucial reconocer las siguientes limitaciones:
+Tamaño del dataset: 24 registros es insuficiente para generalizar conclusiones. La alta exactitud puede ser producto de sobreajuste a los patrones específicos de este grupo.
+Datos simulados: al no provenir de un entorno real, los datos pueden no capturar la complejidad y variabilidad del comportamiento estudiantil auténtico.
+Variables omitidas: factores como condición socioeconómica, dificultades de aprendizaje, trabajo extraescolar o clima familiar no están representados.
+Sesgo de selección: el recordatorio podría estar dirigido selectivamente a ciertos estudiantes, introduciendo sesgos difíciles de controlar.
+7.  Limitaciones del estudio y  Reflexión Ética
+7. Limitaciones del Estudio
+A pesar de los resultados obtenidos, es importante reconocer las limitaciones inherentes al presente trabajo. En primer lugar, el tamaño reducido del conjunto de datos limita la capacidad de generalización del modelo hacia poblaciones estudiantiles más amplias y diversas.
+En segundo lugar, la utilización de datos simulados impide capturar completamente la complejidad del comportamiento académico real, el cual puede estar influenciado por múltiples factores contextuales, emocionales y socioeconómicos.
+Asimismo, el estudio no incorporó variables relacionadas con la motivación, el apoyo familiar, las dificultades de aprendizaje o el acceso a recursos tecnológicos, elementos que podrían enriquecer significativamente el poder predictivo del modelo.
+Por consiguiente, los resultados deben interpretarse como una demostración del potencial de las herramientas de aprendizaje automático en educación, más que como evidencia concluyente sobre su efectividad en entornos reales.
+El uso de modelos de inteligencia artificial en contextos educativos plantea desafíos éticos que van más allá de la precisión técnica. A continuación se analizan los principales riesgos y principios que deben guiar la implementación responsable de este tipo de sistemas.
+7.1 Riesgo de Etiquetado y Estigmatización
+Un modelo que predice quién no entregará una tarea puede, inadvertidamente, generar etiquetas negativas sobre estudiantes. Si los docentes comienzan a tratar de forma diferenciada —o con menor expectativa— a los estudiantes clasificados como 'en riesgo', se produce el denominado efecto Pigmalión negativo: las bajas expectativas generan el resultado que se temía (Rosenthal & Jacobson, 1968). La predicción se convierte en profecía autocumplida.
+7.2 Privacidad y Protección de Datos
+Cualquier implementación real de este modelo requeriría recopilar y procesar datos personales de estudiantes, incluyendo menores de edad. Esto implica cumplir con marcos legales de protección de datos (como la Ley 172-13 de la República Dominicana o el RGPD europeo si aplica), obtener consentimiento informado de padres o tutores, garantizar la anonimización de los registros y establecer protocolos claros de acceso y retención de datos.
+7.3 Sesgos Algorítmicos
+Si el dataset de entrenamiento refleja desigualdades estructurales preexistentes —por ejemplo, si los estudiantes de menor nivel socioeconómico tienen sistemáticamente menor asistencia—, el modelo aprenderá y reproducirá esas desigualdades. Un sistema que penaliza la asistencia sin considerar los factores estructurales que la condicionan puede amplificar injusticias en lugar de corregirlas (Barocas & Hardt, 2017).
+7.4 Principios para un Uso Responsable
+Para mitigar estos riesgos, se proponen las siguientes salvaguardas:
+El modelo debe usarse como herramienta de apoyo, nunca como sustituto del juicio docente.
+Las predicciones deben activar intervenciones de apoyo (tutorías, contacto familiar), no sanciones.
+Deben existir mecanismos de revisión humana obligatoria para toda decisión que afecte a un estudiante.
+El modelo debe ser auditado periódicamente para detectar y corregir sesgos emergentes.
+Los estudiantes y sus familias deben ser informados de la existencia y funcionamiento del sistema.
+8. Recomendaciones
+Para futuras investigaciones se recomienda ampliar el tamaño de la muestra e incorporar datos provenientes de distintos centros educativos con el fin de incrementar la validez externa de los resultados. Del mismo modo, sería pertinente incluir variables adicionales relacionadas con aspectos socioemocionales, familiares y contextuales que permitan comprender de manera más integral los factores asociados al cumplimiento académico.
+Asimismo, se sugiere explorar el desempeño de otros algoritmos de clasificación, como Random Forest o Regresión Logística, comparando sus resultados con los obtenidos mediante árboles de decisión.
+Desde una perspectiva institucional, la implementación de sistemas predictivos debe acompañarse de programas de formación docente en alfabetización digital e inteligencia artificial, garantizando que estas herramientas sean utilizadas como apoyo para la toma de decisiones y no como mecanismos automatizados de exclusión o sanción.
+Finalmente, cualquier iniciativa basada en inteligencia artificial educativa debe desarrollarse respetando principios de equidad, transparencia y protección de datos personales, especialmente cuando involucra información de niños, niñas y adolescentes.
+9. Conclusiones
+Este proyecto demostró que es técnicamente factible construir un modelo de aprendizaje automático capaz de predecir la entrega de tareas escolares con alta exactitud, utilizando únicamente tres variables observables del comportamiento estudiantil. Las principales conclusiones son:
+El Árbol de Decisión resultó ser un algoritmo apropiado para este problema, combinando simplicidad, interpretabilidad y precisión clasificatoria.
+El historial de tareas anteriores entregadas fue la variable con mayor poder predictivo, seguida de la asistencia. El recordatorio, aunque intuitivamente relevante, no aportó información independiente al modelo.
+El modelo alcanzó una exactitud del 100% sobre el conjunto de prueba, lo que, dado el tamaño limitado del dataset, sugiere un ajuste muy preciso a los patrones de este grupo específico.
+La dimensión ética es inseparable de la dimensión técnica: ningún modelo predictivo sobre comportamiento estudiantil puede implementarse responsablemente sin salvaguardas de privacidad, equidad y supervisión humana.
+Para una implementación real, sería necesario ampliar el dataset a cientos o miles de registros, incorporar variables contextuales y validar el modelo en múltiples cohortes y entornos.
+Este trabajo representa un primer paso en la exploración de cómo la inteligencia artificial puede potenciar —no reemplazar— la labor docente, poniendo la tecnología al servicio de una educación más equitativa, personalizada y basada en evidencia.
+9. Referencias Bibliográficas
+Barocas, S., & Hardt, M. (2017). Fairness in machine learning. NeurIPS Tutorial. https://fairmlbook.org
+Baker, R. S., & Inventado, P. S. (2014). Educational data mining and learning analytics. En J. A. Larusson & B. White (Eds.), Learning analytics: From research to practice (pp. 61–75). Springer. https://doi.org/10.1007/978-1-4614-3305-7_4
+Bishop, C. M. (2006). Pattern recognition and machine learning. Springer.
+Breck, E., Cai, S., Nielsen, E., Salib, M., & Sculley, D. (2017). The ML test score: A rubric for ML production readiness and technical debt reduction. En Proceedings of the IEEE International Conference on Big Data (pp. 1123–1132). IEEE. https://doi.org/10.1109/BigData.2017.8258038
+Cooper, H., Robinson, J. C., & Patall, E. A. (2006). Does homework improve academic achievement? A synthesis of research, 1987–2003. Review of Educational Research, 76(1), 1–62. https://doi.org/10.3102/00346543076001001
+Credé, M., & Kuncel, N. R. (2008). Study habits, skills, and attitudes: The third pillar supporting collegiate academic performance. Perspectives on Psychological Science, 3(6), 425–453. https://doi.org/10.1111/j.1745-6924.2008.00089.x
+Domingos, P. (2015). The master algorithm: How the quest for the ultimate learning machine will remake our world. Basic Books.
+Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep learning. MIT Press. https://www.deeplearningbook.org
+Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., … Duchesnay, É. (2011). Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, 12, 2825–2830. https://jmlr.org/papers/v12/pedregosa11a.html
+Quinlan, J. R. (1986). Induction of decision trees. Machine Learning, 1(1), 81–106. https://doi.org/10.1007/BF00116251
+Romero, C., & Ventura, S. (2020). Educational data mining and learning analytics: An updated survey. WIREs Data Mining and Knowledge Discovery, 10(3), e1355. https://doi.org/10.1002/widm.1355
+Rosenthal, R., & Jacobson, L. (1968). Pygmalion in the classroom: Teacher expectation and pupils' intellectual development. Holt, Rinehart and Winston.
+Russell, S., & Norvig, P. (2021). Artificial intelligence: A modern approach (4th ed.). Pearson.
+UNESCO. (2021). Recommendation on the ethics of artificial intelligence. United Nations Educational, Scientific and Cultural Organization. https://unesdoc.unesco.org/ark:/48223/pf0000381137
+VanLehn, K. (2011). The relative effectiveness of human tutoring, intelligent tutoring systems, and other tutoring systems. Educational Psychologist, 46(4), 197–221. https://doi.org/10.1080/00461520.2011.611369
